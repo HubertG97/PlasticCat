@@ -15,6 +15,7 @@ $(document).ready(function(){
 
 });
 
+
 function Reload() {
     try {
         var headElement = document.getElementsByTagName("head")[0];
