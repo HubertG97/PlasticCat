@@ -1,10 +1,13 @@
 class Game {
-    
-    constructor(){
+        private boat1 : Boat;
         
+    constructor(){
+        this.boat1 = new Boat();
+        requestAnimationFrame(this.gameLoop.bind(this));    
     }
     
-    private Gameloop(){
+    private gameLoop(){
+        this.boat1.move();
         requestAnimationFrame(this.gameLoop.bind(this));
     }
 }

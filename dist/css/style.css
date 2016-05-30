@@ -1,9 +1,26 @@
-background{
-     background-image: url(../images/paddle.png);
+body {
+    background-color: #70CF51;
+    font-family: 'Press Start 2P', cursive;
+    margin:0px; padding:0px;
+    overflow:hidden;
+}
+
+body * {
+    position: absolute;
+    display: block;
+    margin:0px; padding:0px;
+    box-sizing: border-box;
+    background-repeat: no-repeat;
 }
 boat {
-     background-image: url(../images/paddle.png);
      width: 50px;
      height: 50px;
+     background-repeat: no-repeat;
      background-color: red;
+}
+cannon {
+    height:300px;
+    width:300px;
+    background-image: url('../images/cannon.png');
+    background-repeat: no-repeat;
 }
