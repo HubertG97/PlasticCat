@@ -14,10 +14,10 @@ class Boat {
     private leftKey : number;
     private rightKey : number;
     
-    private leftSpeed : number = 0;
-    private rightSpeed : number = 0;
-    private downSpeed : number = 0;
-    private upSpeed : number = 0;
+    public leftSpeed : number = 0;
+    public rightSpeed : number = 0;
+    public downSpeed : number = 0;
+    public upSpeed : number = 0;
     
     private rotateLeftKey : number;
     private rotateRightKey : number;
@@ -25,6 +25,8 @@ class Boat {
     private rotation: number = 0;
     
     private a: number;
+    
+    private game : Game;
     
     constructor(){
        
@@ -49,9 +51,6 @@ class Boat {
         // keyboard listener
         window.addEventListener("keydown", this.onKeyDown.bind(this));
         window.addEventListener("keyup", this.onKeyUp.bind(this));
-        
-        
-        
     }
     
     public onKeyDown(event:KeyboardEvent) : void {
@@ -88,11 +87,28 @@ class Boat {
         }
     }
     
+    public emergencyBreak(): void{
+           console.log("emergency");
+           this.leftSpeed = 0;
+           this.rightSpeed = 0;
+           this.upSpeed = 0;
+           this.downSpeed = 0;
+    }
+    
     public move() : void {
         this.posX = this.posX - this.leftSpeed + this.rightSpeed;
         this.posY = this.posY - this.upSpeed + this.downSpeed;
         this.div.style.transform = "translate("+this.posX+"px, "+this.posY+"px)";
         
+    }
+    
+        // Plastic kan positie opvragen
+    public getX():number {
+        return this.posX;
+    }
+    
+    public getY():number {
+        return this.posY;
     }
     
 }

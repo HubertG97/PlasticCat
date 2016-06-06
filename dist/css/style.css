@@ -24,3 +24,21 @@ cannon {
     background-image: url('../images/cannon.png');
     background-repeat: no-repeat;
 }
+plastic{
+    width: 50px;
+     height: 50px;
+     background-repeat: no-repeat;
+     background-color: purple;
+}
+container {
+    position:absolute;
+    
+}
+
+.home img{
+    position: fixed;
+    bottom: 1%;
+    left: 1%;
+    width: 5%;
+    height: 9%;
+}

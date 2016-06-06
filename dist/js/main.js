@@ -53,10 +53,23 @@ var Boat = (function () {
                 break;
         }
     };
+    Boat.prototype.emergencyBreak = function () {
+        console.log("emergency");
+        this.leftSpeed = 0;
+        this.rightSpeed = 0;
+        this.upSpeed = 0;
+        this.downSpeed = 0;
+    };
     Boat.prototype.move = function () {
         this.posX = this.posX - this.leftSpeed + this.rightSpeed;
         this.posY = this.posY - this.upSpeed + this.downSpeed;
         this.div.style.transform = "translate(" + this.posX + "px, " + this.posY + "px)";
+    };
+    Boat.prototype.getX = function () {
+        return this.posX;
+    };
+    Boat.prototype.getY = function () {
+        return this.posY;
     };
     return Boat;
 }());
@@ -78,19 +91,21 @@ var Cannon = (function () {
         switch (event.keyCode) {
             case this.rotateLeftKey:
                 this.rotation = this.rotation - 20;
-                this.div.style.transform = "rotate(" + this.rotation + "deg)";
+                this.update();
                 break;
             case this.rotateRightKey:
                 this.rotation = this.rotation + 20;
-                this.div.style.transform = "rotate(" + this.rotation + "deg)";
+                this.update();
                 break;
         }
     };
     Cannon.prototype.onKeyUp = function (event) {
         switch (event.keyCode) {
             case this.rotateLeftKey:
+                this.update();
                 break;
             case this.rotateRightKey:
+                this.update();
                 break;
         }
     };
@@ -100,22 +115,195 @@ var Cannon = (function () {
     };
     Cannon.prototype.draw = function () {
         console.log("draw");
-        this.div.style.transform = "translate(" + this.x + "px, " + this.y + "px)";
+        this.div.style.transform = "translate(" + this.x + "px, " + this.y + "px) rotate(" + this.rotation + "deg)";
     };
     return Cannon;
 }());
 var Game = (function () {
     function Game() {
-        this.boat1 = new Boat();
+        this.Soup = new Array();
+        this.player = new Player();
         requestAnimationFrame(this.gameLoop.bind(this));
     }
     Game.prototype.gameLoop = function () {
-        this.boat1.move();
+        this.player.boat1.move();
+        for (var i_1 = 0; i_1 < this.player.Soup.length; i_1++) {
+            var soup = this.player.Soup[i_1];
+            for (var j = 0; j < this.player.Soup.length; j++) {
+                var othersoup = this.player.Soup[j];
+                if (soup != othersoup) {
+                    soup.checkPlastic(othersoup);
+                }
+            }
+        }
+        for (var i = 0; i < 5; i++) {
+            this.player.Soup[i].move();
+            this.player.Soup[i].checkBoat(this.player.boat1, this.player);
+        }
         requestAnimationFrame(this.gameLoop.bind(this));
     };
     return Game;
 }());
+var Life = (function () {
+    function Life(amount) {
+        this.amount = amount;
+        for (var i = 0; i < this.amount; i++) {
+            this.div = document.createElement("life");
+            this.container = document.getElementsByTagName("container")[0];
+            document.body.appendChild(this.div);
+        }
+    }
+    return Life;
+}());
 window.addEventListener("load", function () {
     new Game();
 });
+var Plastic = (function () {
+    function Plastic(posX, posY) {
+        this.div = document.createElement("Plastic");
+        document.body.appendChild(this.div);
+        this.posX = posX;
+        this.posY = posY;
+        this.div.style.transform = "translate(" + this.posX + "px, " + this.posY + "px)";
+        this.speedX = Math.ceil(Math.random() * 5);
+        this.speedY = Math.ceil(Math.random() * 5);
+        this.move();
+    }
+    Plastic.prototype.checkBoat = function (boat, player) {
+        this.player = player;
+        if (this.posX + 50 >= boat.getX() && this.posX <= boat.getX() + 50 && this.posY + 50 >= boat.getY() && this.posY <= boat.getY() + 50) {
+            if (this.posX + 50 >= boat.getX() || this.posX <= boat.getX() + 50) {
+                this.speedX *= -1;
+                console.log("De plastic raakt de Plastic aan!");
+                this.randomSpawn();
+            }
+            if (this.posY + 50 >= boat.getY() || this.posY <= boat.getY() + 50) {
+                this.speedY *= -1;
+                console.log("!!!!!!!!");
+                this.randomSpawn();
+            }
+        }
+    };
+    Plastic.prototype.checkPlastic = function (plastic) {
+        if (this.posX + 50 >= plastic.getX() && this.posX <= plastic.getX() + 50 && this.posY + 50 >= plastic.getY() && this.posY <= plastic.getY() + 50) {
+            if (this.posX + 50 >= plastic.getX() || this.posX <= plastic.getX() + 50) {
+                console.log("De plastic raakt de Plastic aan!");
+                this.speedX *= -1;
+            }
+            if (this.posY + 50 >= plastic.getY() || this.posY <= plastic.getY() + 50) {
+                this.speedY *= -1;
+                console.log("!!!!!!!!");
+            }
+        }
+    };
+    Plastic.prototype.move = function () {
+        this.posX += this.speedX;
+        this.posY += this.speedY;
+        if (this.posX + 40 > window.innerWidth || this.posX < 0) {
+            this.speedX *= -1;
+        }
+        if (this.posY + 40 > window.innerHeight || this.posY < 0) {
+            this.speedY *= -1;
+        }
+        this.div.style.transform = "translate(" + this.posX + "px, " + this.posY + "px)";
+    };
+    Plastic.prototype.getX = function () {
+        return this.posX;
+    };
+    Plastic.prototype.getY = function () {
+        return this.posY;
+    };
+    Plastic.prototype.randomSpawn = function () {
+        this.posX = Math.ceil(Math.random() * innerWidth);
+        this.posY = Math.ceil(Math.random() * innerHeight);
+        if (this.posX + 50 >= this.player.boat1.getX() && this.posX <= this.player.boat1.getX() + 50 && this.posY + 50 >= this.player.boat1.getY() && this.posY <= this.player.boat1.getY() + 50) {
+            console.log("De plastic spawnt random in de boot!");
+            this.posX = Math.ceil(Math.random() * innerWidth);
+            this.posY = Math.ceil(Math.random() * innerHeight);
+            this.div.style.transform = "translate(" + this.posX + "px, " + this.posY + "px)";
+            if (this.posX + 50 >= this.player.boat1.getX() && this.posX <= this.player.boat1.getX() + 50 && this.posY + 50 >= this.player.boat1.getY() && this.posY <= this.player.boat1.getY() + 50) {
+                console.log("De plastic spawnt random in de boot!");
+                this.posX = Math.ceil(Math.random() * innerWidth);
+                this.posY = Math.ceil(Math.random() * innerHeight);
+                this.div.style.transform = "translate(" + this.posX + "px, " + this.posY + "px)";
+                if (this.posX + 50 >= this.player.boat1.getX() && this.posX <= this.player.boat1.getX() + 50 && this.posY + 50 >= this.player.boat1.getY() && this.posY <= this.player.boat1.getY() + 50) {
+                    console.log("De plastic spawnt random in de boot!");
+                    this.posX = Math.ceil(Math.random() * innerWidth);
+                    this.posY = Math.ceil(Math.random() * innerHeight);
+                    this.div.style.transform = "translate(" + this.posX + "px, " + this.posY + "px)";
+                    if (this.posX + 50 >= this.player.boat1.getX() && this.posX <= this.player.boat1.getX() + 50 && this.posY + 50 >= this.player.boat1.getY() && this.posY <= this.player.boat1.getY() + 50) {
+                        console.log("De plastic spawnt random in de boot!");
+                        this.posX = Math.ceil(Math.random() * innerWidth);
+                        this.posY = Math.ceil(Math.random() * innerHeight);
+                        this.div.style.transform = "translate(" + this.posX + "px, " + this.posY + "px)";
+                    }
+                    else {
+                    }
+                }
+                else {
+                }
+            }
+            else {
+            }
+        }
+        else {
+        }
+    };
+    return Plastic;
+}());
+var Player = (function () {
+    function Player() {
+        this.Soup = new Array();
+        this.lifes = 3;
+        this.score = 0;
+        this.boat1 = new Boat();
+        this.life = new Life();
+        for (var i = 0; i < 5; i++) {
+            this.posX = Math.ceil(Math.random() * innerWidth);
+            this.posY = Math.ceil(Math.random() * innerHeight);
+            if (this.posX + 50 >= this.boat1.getX() && this.posX <= this.boat1.getX() + 50 && this.posY + 50 >= this.boat1.getY() && this.posY <= this.boat1.getY() + 50) {
+                console.log("De plastic spawnt random in de boot!");
+                this.posX = Math.ceil(Math.random() * innerWidth);
+                this.posY = Math.ceil(Math.random() * innerHeight);
+                if (this.posX + 50 >= this.boat1.getX() && this.posX <= this.boat1.getX() + 50 && this.posY + 50 >= this.boat1.getY() && this.posY <= this.boat1.getY() + 50) {
+                    console.log("De plastic spawnt random in de boot!");
+                    this.posX = Math.ceil(Math.random() * innerWidth);
+                    this.posY = Math.ceil(Math.random() * innerHeight);
+                    if (this.posX + 50 >= this.boat1.getX() && this.posX <= this.boat1.getX() + 50 && this.posY + 50 >= this.boat1.getY() && this.posY <= this.boat1.getY() + 50) {
+                        console.log("De plastic spawnt random in de boot!");
+                        this.posX = Math.ceil(Math.random() * innerWidth);
+                        this.posY = Math.ceil(Math.random() * innerHeight);
+                        if (this.posX + 50 >= this.boat1.getX() && this.posX <= this.boat1.getX() + 50 && this.posY + 50 >= this.boat1.getY() && this.posY <= this.boat1.getY() + 50) {
+                            console.log("De plastic spawnt random in de boot!");
+                            this.posX = Math.ceil(Math.random() * innerWidth);
+                            this.posY = Math.ceil(Math.random() * innerHeight);
+                        }
+                        else {
+                            this.plastic = new Plastic(this.posX, this.posY);
+                            this.Soup[i] = this.plastic;
+                        }
+                    }
+                    else {
+                        this.plastic = new Plastic(this.posX, this.posY);
+                        this.Soup[i] = this.plastic;
+                    }
+                }
+                else {
+                    this.plastic = new Plastic(this.posX, this.posY);
+                    this.Soup[i] = this.plastic;
+                }
+            }
+            else {
+                this.plastic = new Plastic(this.posX, this.posY);
+                this.Soup[i] = this.plastic;
+            }
+        }
+    }
+    Player.prototype.looseLife = function () {
+        this.lifes = this.lifes - 1;
+        this.container = document.getElementsByTagName("container")[0];
+        this.lifeImage = document.getElementsByTagName("life")[this.lifes];
+    };
+    return Player;
+}());
 //# sourceMappingURL=main.js.map

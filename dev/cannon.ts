@@ -19,6 +19,7 @@ class Cannon {
         this.rotateRightKey = 39;
         this.x = x;
         this.y = y;
+        
         this.update();
         
         // keyboard listener
@@ -30,11 +31,11 @@ class Cannon {
         switch (event.keyCode){
             case this.rotateLeftKey:          
             this.rotation = this.rotation - 20;
-            this.div.style.transform = "rotate("+this.rotation+"deg)";
+            this.update();
             break;
             case this.rotateRightKey:
             this.rotation = this.rotation + 20;
-            this.div.style.transform = "rotate("+this.rotation+"deg)";
+            this.update();
             break;
         }
     }
@@ -42,8 +43,10 @@ class Cannon {
     public onKeyUp(event:KeyboardEvent):void{
         switch (event.keyCode){
             case this.rotateLeftKey:
+            this.update();
             break;
             case this.rotateRightKey:
+            this.update();
             break;
         }
     }
@@ -56,6 +59,6 @@ class Cannon {
     
     public draw() : void {
         console.log("draw");
-        this.div.style.transform = "translate("+this.x+"px, "+this.y+"px)";
+        this.div.style.transform = "translate("+this.x+"px, "+this.y+"px) rotate("+this.rotation+"deg)";
     }
 }
