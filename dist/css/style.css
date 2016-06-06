@@ -1,5 +1,9 @@
 body {
-    background-color: #70CF51;
+    background: url('../../images/background.png') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
     font-family: 'Press Start 2P', cursive;
     margin:0px; padding:0px;
     overflow:hidden;
@@ -13,10 +17,10 @@ body * {
     background-repeat: no-repeat;
 }
 boat {
-     width: 50px;
-     height: 50px;
+     width: 510px;
+     height: 314px;
      background-repeat: no-repeat;
-     background-color: red;
+     background-image: url('../../images/kattest.png');
 }
 cannon {
     height:300px;
@@ -25,10 +29,10 @@ cannon {
     background-repeat: no-repeat;
 }
 plastic{
-    width: 50px;
-     height: 50px;
+    width: 490px;
+     height: 356px;
      background-repeat: no-repeat;
-     background-color: purple;
+    background-image: url('../../images/plastick.png');;
 }
 container {
     position:absolute;

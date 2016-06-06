@@ -24,13 +24,13 @@ class Plastic {
     
     public checkBoat(boat:Boat, player:Player) {
         this.player = player; 
-        if (this.posX+50 >= boat.getX() && this.posX <= boat.getX() + 50 && this.posY+50 >= boat.getY() && this.posY <= boat.getY()+50) { 
-           if (this.posX+50 >= boat.getX() || this.posX <= boat.getX() + 50) { 
+        if (this.posX+220 >= boat.getX() && this.posX <= boat.getX() + 220 && this.posY+100 >= boat.getY() && this.posY <= boat.getY()+100) { 
+           if (this.posX+220 >= boat.getX() || this.posX <= boat.getX() + 220) { 
            this.speedX *= -1;
            console.log("De plastic raakt de Plastic aan!");
            this.randomSpawn();
         }
-         if (this.posY+50 >= boat.getY() || this.posY <= boat.getY()+50) {
+         if (this.posY+100 >= boat.getY() || this.posY <= boat.getY()+100) {
            this.speedY *= -1;
            console.log("!!!!!!!!");
            this.randomSpawn();
