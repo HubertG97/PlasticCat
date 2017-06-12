@@ -10,6 +10,7 @@ class Cannon {
     public y:number;
     
     private rotation: number = 0;
+    public rotationTick : number = 0;
     
     constructor(b:Boat, x:number, y:number){
         this.boat = b;
@@ -19,22 +20,37 @@ class Cannon {
         this.rotateRightKey = 39;
         this.x = x;
         this.y = y;
+        
         this.update();
         
         // keyboard listener
         window.addEventListener("keydown", this.onKeyDown.bind(this));
         window.addEventListener("keyup", this.onKeyUp.bind(this));
     }
-    
+
+
+    //rotatie van kanon vizier
     public onKeyDown(event:KeyboardEvent) : void {
+       if(this.rotationTick == 12){
+            this.rotationTick = 0;
+        }
+        if(this.rotationTick == -1){
+            this.rotationTick = 11;
+        }
+     
+        
         switch (event.keyCode){
-            case this.rotateLeftKey:          
-            this.rotation = this.rotation - 20;
-            this.div.style.transform = "rotate("+this.rotation+"deg)";
+            case this.rotateLeftKey:  
+            this.rotationTick = this.rotationTick - 1; 
+           
+            this.rotation = this.rotation - 30;
+            this.update();
             break;
             case this.rotateRightKey:
-            this.rotation = this.rotation + 20;
-            this.div.style.transform = "rotate("+this.rotation+"deg)";
+            this.rotationTick = this.rotationTick + 1; 
+            
+            this.rotation = this.rotation + 30;
+            this.update();
             break;
         }
     }
@@ -42,20 +58,19 @@ class Cannon {
     public onKeyUp(event:KeyboardEvent):void{
         switch (event.keyCode){
             case this.rotateLeftKey:
+            this.update();
             break;
             case this.rotateRightKey:
+            this.update();
             break;
         }
     }
-    
+    //teken het kanon
      public update():void {
-         console.log("update");
-        // vraag: hoe kan het wiel weten waar de auto is?
         this.draw();
     }
     
     public draw() : void {
-        console.log("draw");
-        this.div.style.transform = "translate("+this.x+"px, "+this.y+"px)";
+        this.div.style.transform = "translate("+this.x+"px, "+this.y+"px) rotate("+this.rotation+"deg)";
     }
 }
